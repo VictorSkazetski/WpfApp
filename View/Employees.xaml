@@ -1,0 +1,77 @@
+﻿<UserControl x:Class="WpfAppDB.Employees"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WpfAppDB"
+             xmlns:extensions="clr-namespace:WpfAppDB.Extensions"
+             xmlns:viewModel="clr-namespace:WpfAppDB.ViewModel"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <DataTemplate DataType="{x:Type viewModel:AddEmployeeVm}">
+            <local:AddEmployee/>
+        </DataTemplate>
+    </UserControl.Resources>
+        <Grid>
+            <DataGrid x:Name="grid" AutoGenerateColumns="False"
+                      CanUserAddRows="False"
+                      ItemsSource="{Binding Employees}">
+                <DataGrid.Resources>
+                    <extensions:DateConverter x:Key="conv"/>
+                </DataGrid.Resources>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="ID" 
+                                        Binding="{Binding ID}"
+                                        IsReadOnly="True"
+                                        Width="*"/>
+                <DataGridTextColumn Header="Имя" 
+                                        Binding="{Binding Name}"
+                                        IsReadOnly="True"
+                                        Width="*"/>
+                    <DataGridTextColumn Header="Фамилия" 
+                                        Binding="{Binding Surname}"
+                                        IsReadOnly="True"
+                                        Width="*"/>
+                    <DataGridTextColumn Header="Отчество" 
+                                        Binding="{Binding MiddleName}"
+                                        IsReadOnly="True"
+                                        Width="*"/>
+                    <DataGridTextColumn Header="Дата рождения" 
+                                        Binding="{Binding Birthday, Converter={StaticResource conv}}" 
+                                        IsReadOnly="True"
+                                        Width="*"/>
+                    <DataGridTextColumn Header="Отдел" 
+                                        Binding="{Binding Department}" 
+                                        IsReadOnly="True"
+                                        Width="*"/>
+                    <DataGridTemplateColumn Width="*">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button
+                                        Command="{Binding DataContext.DropRow, RelativeSource={RelativeSource AncestorType=DataGrid} }"
+                                        CommandParameter="{Binding ElementName=grid, Path=SelectedItem}"
+                                        Content="Удалить">
+                                </Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Width="*">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button
+                                    Command="{Binding DataContext.UpdateEmployee, RelativeSource={RelativeSource AncestorType=DataGrid} }"
+                                    CommandParameter="{Binding ElementName=grid, Path=SelectedItem}"
+                                    Content="Изменить">
+                                </Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+            
+            <ContentControl DockPanel.Dock="Left"
+                                Content="{Binding SelectedViewModel}">
+            </ContentControl>
+    </Grid>
+</UserControl>
